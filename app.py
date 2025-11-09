@@ -44,6 +44,15 @@ btn_img_copy = ctk.CTkImage(
 
 
 # --------------------------------- Functions -------------------------------- #
+# Function that copies password to clipboard with visual feedback
+def copy_to_clipboard():
+    pyperclip.copy(password)
+    
+    label_copied.place(relx=0.5, rely=0.45, anchor="center")
+    
+    # Hide the notification after 1.5 seconds
+    app.after(1500, lambda: label_copied.place_forget())
+
 # Function that generates password and update app
 def generate_password():
     global password
@@ -113,9 +122,10 @@ def update_checkboxes_state(checkbox):
 # Frame password
 frame_password = ctk.CTkFrame(app, corner_radius=10)
 label_password = ctk.CTkLabel(frame_password, textvariable=password_tkvar, font=("Arial", 25))
+label_copied = ctk.CTkLabel(frame_password, text="Copied!", font=("Arial Bold", 20), text_color="#59c934")
 progressbar_password = ctk.CTkProgressBar(frame_password, height=10, width=785, progress_color="#59c934", fg_color="")
 button_password_1 = ctk.CTkButton(frame_password, image=btn_img_generate, height=30, width=20, hover_color=("#c9c9c9","#242424"), corner_radius=20 , fg_color="transparent", text="", command=generate_password)
-button_password_2 = ctk.CTkButton(frame_password, image=btn_img_copy, height=30, width=20, hover_color=("#c9c9c9","#242424"), corner_radius=20, fg_color="transparent", text="", command=(lambda: pyperclip.copy(password)))
+button_password_2 = ctk.CTkButton(frame_password, image=btn_img_copy, height=30, width=20, hover_color=("#c9c9c9","#242424"), corner_radius=20, fg_color="transparent", text="", command=copy_to_clipboard)
 
 # Frame customize
 frame_customize = ctk.CTkFrame(app, corner_radius=10)
@@ -141,6 +151,7 @@ app.rowconfigure((0,1,2,3,4), weight=1, uniform="a")
 # Frame password
 frame_password.grid(column=0, row=0, sticky="nsew", padx=10, pady=10)
 label_password.place(relx=0.02, rely=0.45, anchor="w")
+label_copied.place_forget()
 progressbar_password.place(relx=0.5, rely=0.98, anchor="center")
 button_password_1.pack(side="right", padx=5)
 button_password_2.pack(side="right")
@@ -165,7 +176,7 @@ checkbox_customize_4.place(relx=0.4, rely=0.35, anchor="nw")
 
 # ---------------------------------- Events ---------------------------------- #
 app.bind('<Control-t>', (lambda event: theme.toggle_theme()))
-app.bind('<Control-c>', (lambda event: pyperclip.copy(password)))
+app.bind('<Control-c>', (lambda event: copy_to_clipboard()))
 app.bind('<Control-g>', (lambda event: generate_password()))
 
 
